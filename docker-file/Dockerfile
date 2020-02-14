@@ -30,7 +30,7 @@ RUN set -ex \
         freetds-dev \
         libkrb5-dev \
         libsasl2-dev \
-        libssl-dev \
+        lseibssl-dev \
         libffi-dev \
         libpq-dev \
         libaio-dev \
@@ -60,8 +60,8 @@ RUN set -ex \
     && ln /usr/lib/instantclient_12_1/libnnz12.so /usr/lib/libnnz12.so \
     && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} airflow \
     && pip --no-cache-dir install -i https://pypi.tuna.tsinghua.edu.cn/simple -U pip setuptools wheel \
-    && pip --no-cache-dir install -i https://pypi.tuna.tsinghua.edu.cn/simple -r /etc/pip/requirements.txt \
     && pip --no-cache-dir install prison==0.1.2 \
+    && pip --no-cache-dir install -i https://pypi.tuna.tsinghua.edu.cn/simple -r /etc/pip/requirements.txt \
     && apt-get purge --auto-remove -yqq $buildDeps \
     && apt-get autoremove -yqq --purge \
     && apt-get clean \
