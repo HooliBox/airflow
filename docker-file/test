@@ -1,0 +1,32 @@
+FROM puckel/docker-airflow:1.10.9
+
+USER root
+
+COPY ./instantclient-basic-linux.x64-12.1.0.2.0.zip ./
+COPY ./sources.list /etc/apt/
+
+RUN apt-get update \
+    && apt-get install -yqq --no-install-recommends unzip \
+    && unzip instantclient-basic-linux.x64-12.1.0.2.0.zip \
+    && rm instantclient-basic-linux.x64-12.1.0.2.0.zip \
+    && mv instantclient_12_1/ /usr/lib/ \
+    && ln /usr/lib/instantclient_12_1/libclntsh.so.12.1 /usr/lib/libclntsh.so \
+    && ln /usr/lib/instantclient_12_1/libocci.so.12.1 /usr/lib/libocci.so \
+    && ln /usr/lib/instantclient_12_1/libociei.so /usr/lib/libociei.so \
+    && ln /usr/lib/instantclient_12_1/libnnz12.so /usr/lib/libnnz12.so \
+    && apt-get autoremove -yqq --purge \
+    && apt-get clean \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /tmp/* \
+        /var/tmp/* \
+        /usr/share/man \
+        /usr/share/doc \
+        /usr/share/doc-base
+
+ENV ORACLE_BASE /usr/lib/instantclient_12_1
+ENV LD_LIBRARY_PATH /usr/lib/instantclient_12_1
+ENV TNS_ADMIN /usr/lib/instantclient_12_1
+ENV ORACLE_HOME /usr/lib/instantclient_12_1
+
+USER airflow
